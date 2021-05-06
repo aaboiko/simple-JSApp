@@ -1,0 +1,43 @@
+p {
+ font-size: 30px;
+ margin-bottom: 20px;
+ color: white;
+}
+
+.blue{
+  background-color:blue;
+  width: 600px;
+  height: 300px;
+  margin-left: 200px;
+  margin-top: 200px;
+}
+
+input{
+  width: 400px;
+  height: 40px;
+  border-color: black;
+}
+
+select{
+  width: 200px;
+  height: 40px;
+}
+
+button{
+  height: 40px;
+  width: 50px;
+  background-color: white;
+  margin-left: auto;
+}
+
+.select-option{
+    font-size: 25px;
+}
+
+.red{
+  background-color:red;
+  width: 600px;
+  height: 300px;
+  margin-left: 200px;
+  margin-top: 0px;
+}
