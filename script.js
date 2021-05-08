@@ -3,25 +3,31 @@ let addButton = document.getElementById("add-button");
 let input = document.getElementById("input");
 let sel = document.getElementById("select");
 let canMakeBlack = false;
-let optionsObject = new Map();
+let optionsObject = [];
 let json;
 
-// if (localStorage.getItem('length') == undefined) {
-//     localStorage.setItem('length', sel.options.length);
-// }
-// else {
-//     sel.options.length = localStorage.getItem('length');
-// }
-
-// for (let i = 0; i < parseInt(localStorage.getItem('length')); i++) {
-//     console.log(i);
-//     sel.options[i].innerText = localStorage.getItem(i);
-//     console.log('Option updated: ' + i + ' - ' + localStorage.getItem(i));
-// }
-
 optionsObject = JSON.parse(localStorage.getItem('data'));
-for(let i=0; i<sel.options.length; i++){
-    sel.options[i].innerText = optionsObject.get(i);
+
+if (optionsObject !== null) {
+    sel.selectedIndex = localStorage.getItem('selected');
+    console.log('Selected option: ' + sel.selectedIndex);
+    for (let i = 0; i < optionsObject.length; i++) {
+        try {
+            sel.options[i].innerText = optionsObject[i];
+            console.log(sel.options[i].innerText);
+        }
+        catch (err) {
+            let opt = document.createElement('option');
+            sel.append(opt);
+            sel.options[sel.options.length - 1].innerText = optionsObject[i];
+        }
+        console.log('Parsed: ' + optionsObject[i]);
+    }
+    input.value = sel.options[sel.selectedIndex].innerText;
+}
+else {
+    optionsObject = [1, 2, 3, 4];
+    console.log(optionsObject.length);
 }
 
 function changeOption() {
@@ -34,7 +40,7 @@ function changeOption() {
     else {
         console.log(val);
         sel.options[sel.selectedIndex].innerText = val;
-        optionsObject.set(sel.selectedIndex, val);
+        optionsObject[sel.selectedIndex] = val;
         saveData();
     }
 }
@@ -49,8 +55,8 @@ function addOption() {
     else {
         let opt = document.createElement('option');
         sel.append(opt);
-        sel.options[sel.options.length - 1].innerText = input.value;
-        optionsObject.set(sel.options.length - 1, val);
+        sel.options[sel.options.length - 1].innerText = val;
+        optionsObject.push(val);
         saveData();
     }
 }
@@ -62,12 +68,13 @@ function selectClick() {
 
 function saveData(){
     for(let i=0; i<sel.options.length; i++){
-        optionsObject.set(i, sel.options[i].innerText);
+        optionsObject[i] = sel.options[i].innerText;
     }
     json = JSON.stringify(optionsObject);
     localStorage.setItem('data', json);
-    console.log('saved');
-    console.log(optionsObject.size);
+    localStorage.setItem('selected', sel.selectedIndex);
+    console.log('Saved. Selected: ' + sel.selectedIndex);
+    console.log(optionsObject.length);
 }
 
 sendButton.addEventListener('click', changeOption);
@@ -82,6 +89,8 @@ input.oninput = function () {
 }
 sel.addEventListener('change', function () {
     input.value = sel.options[sel.selectedIndex].innerText;
+    localStorage.setItem('selected', sel.selectedIndex);
+    console.log('Selected option changed on ' + sel.selectedIndex);
 });
 
 addButton.addEventListener('click', addOption);
