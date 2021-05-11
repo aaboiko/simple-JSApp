@@ -12,13 +12,12 @@ p {
   margin-top: 200px;
 }
 
-input{
+.input{
   width: 400px;
   height: 40px;
-}
-.input-black{
   border-color: black;
 }
+
 .input-red{
   border-color: red;
 }
@@ -45,4 +44,16 @@ button{
   height: 300px;
   margin-left: 200px;
   margin-top: 0px;
+}
+
+.option {
+  color: green;
+  font-size: 20px;
+  padding: 0 10px;
+}
+
+.input {
+  border-radius: 5px;
+  padding: 0 10px;
+  background-color: pink;
 }

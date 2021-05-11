@@ -1,7 +1,7 @@
 const sendButton = document.getElementById("send-button");
 const addButton = document.getElementById("add-button");
 const input = document.getElementById("input");
-const sel = document.getElementById("select");
+const select = document.getElementById("select");
 let canMakeBlack = false;
 let optionsObject = [];
 let json;
@@ -9,35 +9,35 @@ let json;
 optionsObject = JSON.parse(localStorage.getItem('data'));
 
 if (optionsObject !== null) {
-    console.log('Selected option: ' + sel.selectedIndex);
+    console.log('Selected option: ' + select.selectedIndex);
     for (let i = 0; i < optionsObject.length; i++) {
-        // TODO: remove try/catch - done
-        sel.options[i].innerText = optionsObject[i];
-        console.log(sel.options[i].value);
-        let opt = document.createElement('option');
-        sel.append(opt);
-        sel.options[sel.options.length - 1].innerText = optionsObject[i];
-        console.log('Parsed: ' + optionsObject[i]);
-        sel.selectedIndex = localStorage.getItem('selected');
+        if (select.options[i] === undefined) {
+            let opt = document.createElement('option');
+            select.append(opt);
+            select.options[select.options.length - 1].value = optionsObject[i];
+            select.options[select.options.length - 1].text = select.options[select.options.length - 1].value;
+        }
+        select.options[i].value = optionsObject[i];
+        select.options[i].text = select.options[i].value;
+
+        select.selectedIndex = localStorage.getItem('selected');
     }
-    input.value = sel.options[sel.selectedIndex].value;
+    input.value = select.options[select.selectedIndex].value;
 }
 else {
     optionsObject = [1, 2, 3, 4];
-    console.log(optionsObject.length);
 }
-// TODO: replace inline styles with class usage - done
+
 function changeOption() {
     let val = input.value.trim();
     if (val === '') {
-        input.className = 'input-red';
-        console.log("border is red");
+        input.classList.toggle('input-red', true);
         canMakeBlack = true;
     }
     else {
-        console.log('Sent: ' + val);
-        sel.options[sel.selectedIndex].text = val;
-        optionsObject[sel.selectedIndex] = val;
+        select.options[select.selectedIndex].value = val;
+        select.options[select.selectedIndex].text = val;
+        optionsObject[select.selectedIndex] = val;
         input.value = input.value.trim();
         saveData();
     }
@@ -46,52 +46,48 @@ function changeOption() {
 function addOption() {
     let val = input.value.trim();
     if (val === '') {
-        input.className = 'input-red';
-        console.log("border is red");
+        input.classList.toggle('input-red', true);
         canMakeBlack = true;
     }
     else {
         let opt = document.createElement('option');
-        sel.append(opt);
-        sel.options[sel.options.length - 1].innerText = val;
+        opt.classList.add('option');
+        select.append(opt);
+        select.options[select.options.length - 1].value = val;
+        select.options[select.options.length - 1].text = val;
         optionsObject.push(val);
         saveData();
     }
 }
 
 function selectClick() {
-    input.className = 'input-black';
+    input.classList.toggle('input-red', false);
     canMakeBlack = false;
 }
 
 function saveData() {
-    for (let i = 0; i < sel.options.length; i++) {
-        optionsObject[i] = sel.options[i].innerText;
+    for (let i = 0; i < select.options.length; i++) {
+        optionsObject[i] = select.options[i].innerText;
     }
     json = JSON.stringify(optionsObject);
     localStorage.setItem('data', json);
-    localStorage.setItem('selected', sel.selectedIndex);
-    console.log('Saved. Selected: ' + sel.selectedIndex);
-    console.log(optionsObject.length);
+    localStorage.setItem('selected', select.selectedIndex);
 }
 
 sendButton.addEventListener('click', changeOption);
-sel.addEventListener('click', selectClick);
+select.addEventListener('click', selectClick);
 
 input.oninput = function () {
-    // TODO: refctor - done
+    
     if (canMakeBlack) {
-        input.style.borderColor = "black";
-        console.log("border is black");
+        input.classList.toggle('input-red', false);
         canMakeBlack = false;
     }
 }
-// TODO: use values instead of innerText
-// TODO: cleanup id - done
-sel.addEventListener('change', function () {
-    input.value = sel.options[sel.selectedIndex].innerText;
-    localStorage.setItem('selected', sel.selectedIndex);
-    console.log('Selected option changed on ' + sel.selectedIndex);
+
+select.addEventListener('change', function () {
+    input.value = select.options[select.selectedIndex].value;
+    localStorage.setItem('selected', select.selectedIndex);
 });
 
 addButton.addEventListener('click', addOption);
@@ -99,19 +95,16 @@ addButton.addEventListener('click', addOption);
 document.addEventListener('keydown', function (event) {
     if (event.key === 'Enter') {
         let number = parseInt(prompt('Press 1 to save option or 2 to add option', 1));
-        console.log(number);
 
         switch (number) {
             case 1:
-                console.log('1 pressed');
                 changeOption();
                 break;
             case 2:
-                console.log('2 pressed');
                 addOption();
                 break;
             default:
-                console.log('Default');
+                alert('You can type 1 or 2 only');
         }
     }
 });
