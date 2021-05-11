@@ -15,7 +15,12 @@ p {
 input{
   width: 400px;
   height: 40px;
+}
+.input-black{
   border-color: black;
+}
+.input-red{
+  border-color: red;
 }
 
 select{
