@@ -6,22 +6,12 @@ let canMakeBlack = false;
 let optionsObject = new Map();
 let json;
 
-// if (localStorage.getItem('length') == undefined) {
-//     localStorage.setItem('length', sel.options.length);
-// }
-// else {
-//     sel.options.length = localStorage.getItem('length');
-// }
-
-// for (let i = 0; i < parseInt(localStorage.getItem('length')); i++) {
-//     console.log(i);
-//     sel.options[i].innerText = localStorage.getItem(i);
-//     console.log('Option updated: ' + i + ' - ' + localStorage.getItem(i));
-// }
-
 optionsObject = JSON.parse(localStorage.getItem('data'));
-for(let i=0; i<sel.options.length; i++){
-    sel.options[i].innerText = optionsObject.get(i);
+if (optionsObject.size < 1) {
+    console.log('Items in parsed object: ' + optionsObject.size);
+    for (let i = 0; i < optionsObject.size; i++) {
+        sel.options[i].innerText = optionsObject.get(i);
+    }
 }
 
 function changeOption() {
@@ -60,8 +50,8 @@ function selectClick() {
     canMakeBlack = false;
 }
 
-function saveData(){
-    for(let i=0; i<sel.options.length; i++){
+function saveData() {
+    for (let i = 0; i < sel.options.length; i++) {
         optionsObject.set(i, sel.options[i].innerText);
     }
     json = JSON.stringify(optionsObject);
@@ -82,6 +72,7 @@ input.oninput = function () {
 }
 sel.addEventListener('change', function () {
     input.value = sel.options[sel.selectedIndex].innerText;
+    localStorage.setItem('selected', sel.selectedIndex);
 });
 
 addButton.addEventListener('click', addOption);
